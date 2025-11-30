@@ -19,7 +19,7 @@ const Navbar = () => {
     // Agregamos 'fixed-top' para mantenerla fija y 'shadow' para el diseño
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow">
       <div className="container">
-        <Link className="navbar-brand" to="/">Bottega digitale di Vincenzo)</Link>
+        <Link className="navbar-brand" to="/">Bottega di Vincenzo</Link>
         
         <button 
           className="navbar-toggler" 
