@@ -1,0 +1,44 @@
+[
+  { 
+    "id": "1", 
+    "name": "Laptop Gamer Nitro", 
+    "price": 1250, 
+    "description": "Potencia extrema para tus juegos favoritos con tarjeta gráfica RTX.", 
+    "image": "https://images.unsplash.com/photo-1603302576837-637886e49745?auto=format&fit=crop&w=500&q=60" 
+  },
+  { 
+    "id": "2", 
+    "name": "Auriculares Sony WH", 
+    "price": 340, 
+    "description": "Cancelación de ruido líder en la industria.", 
+    "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=60" 
+  },
+  { 
+    "id": "3", 
+    "name": "Cámara DSLR Canon", 
+    "price": 850, 
+    "description": "Captura momentos inolvidables con calidad profesional.", 
+    "image": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=500&q=60" 
+  },
+  { 
+    "id": "4", 
+    "name": "Smartwatch Serie 7", 
+    "price": 399, 
+    "description": "Monitoreo de salud avanzado y pantalla retina.", 
+    "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=60" 
+  },
+  { 
+    "id": "5", 
+    "name": "Sneakers Urbanos", 
+    "price": 120, 
+    "description": "Estilo y comodidad para tu día a día.", 
+    "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=500&q=60" 
+  },
+  { 
+    "id": "6", 
+    "name": "Mochila de Viaje", 
+    "price": 85, 
+    "description": "Resistente al agua y con compartimento para laptop.", 
+    "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=500&q=60" 
+  }
+]
