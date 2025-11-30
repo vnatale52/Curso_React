@@ -5,101 +5,122 @@
 import { useState, useEffect } from 'react';
 import { useProducts } from '../context/ProductContext';
 import { useAuth } from '../context/AuthContext';
-import { useCart } from '../context/CartContext'; // 1. Importar Contexto Carrito
+import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import Pagination from '../components/Pagination';
 
 const ProductList = () => {
+  // 1. Consumo de Contextos
   const { products, loading, error, setDataSource, dataSource } = useProducts();
   const { isAuthenticated } = useAuth();
-  const { cart } = useCart(); // 2. Obtener estado del carrito
+  const { cart } = useCart();
   
+  // 2. Estado local para Paginación
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  // Mensaje de Login al entrar (solo si no está logueado)
+  // 3. Efecto: Mensaje de Login (Opcional, para recordar al usuario)
   useEffect(() => {
     if (!isAuthenticated) {
+      // Usamos un timer para que no sea invasivo apenas carga la página
       const timer = setTimeout(() => {
-        // Usamos un toast o notificación menos intrusiva si es posible, 
-        // pero mantenemos el alert por requerimiento previo, aunque solo una vez.
-        // (Opcional: podrías comentar esto si ya molesta al desarrollar)
-        // alert("¡Bienvenido! Por favor Inicie Sesión para acceder al Carrito...");
+         // Puedes descomentar la siguiente línea si deseas el alert nativo:
+         // alert("¡Bienvenido! Recuerde Iniciar Sesión para comprar.");
       }, 1000);
       return () => clearTimeout(timer);
     }
   }, [isAuthenticated]);
 
+  // 4. Manejo de Estados de Carga y Error
   if (loading) return (
-    <div className="d-flex flex-column align-items-center mt-5">
-        <div className="spinner-border text-primary" role="status"></div>
-        <p className="mt-2">Cargando catálogo...</p>
+    <div className="d-flex flex-column align-items-center justify-content-center mt-5 py-5">
+        <div className="spinner-border text-primary" role="status" style={{width: '3rem', height: '3rem'}}></div>
+        <p className="mt-3 text-muted fw-bold">Cargando catálogo...</p>
     </div>
   );
 
-  if (error) return <div className="alert alert-danger mt-5">Error: {error}</div>;
+  if (error) return (
+    <div className="alert alert-danger mt-5 shadow-sm" role="alert">
+      <i className="bi bi-exclamation-triangle-fill me-2"></i>
+      Error: {error}
+    </div>
+  );
 
-  // Lógica de Paginación
+  // 5. Lógica de Paginación (Corte del array de productos)
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div>
-      {/* 
-         3. NUEVO: Mensaje de "Presione Carrito" 
-         Solo se muestra si hay items en el carrito 
+    <div className="fade-in">
+      
+      {/* --- ALERTA DE CARRITO (CTA) --- 
+          Solo se muestra si el usuario ya agregó algo al carrito.
       */}
       {cart.length > 0 && (
-        <div className="alert alert-success d-flex align-items-center justify-content-between shadow-sm mb-4 animate__animated animate__fadeInDown" role="alert">
-          <div>
+        <div className="alert alert-success d-flex align-items-center justify-content-between shadow mb-4 sticky-top" 
+             style={{top: '80px', zIndex: 1020}} role="alert">
+          <div className="text-truncate me-2">
             <i className="bi bi-cart-check-fill fs-4 me-2"></i>
-            <span className="fw-bold">Tiene productos seleccionados.</span>
-            <span className="d-none d-md-inline ms-1">No olvide completar su pedido.</span>
+            <span className="fw-bold">Tiene productos pendientes.</span>
           </div>
-          <Link to="/carrito" className="btn btn-sm btn-success border border-white fw-bold">
-            Presione Carrito para finalizar <i className="bi bi-arrow-right ms-1"></i>
+          <Link to="/carrito" className="btn btn-sm btn-success border border-white fw-bold text-nowrap">
+            Ir al Carrito <i className="bi bi-arrow-right ms-1"></i>
           </Link>
         </div>
       )}
 
-      {/* Encabezado y Selectores */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
-          <h2 className="display-6">Catálogo de Productos</h2>
+      {/* --- ENCABEZADO Y FILTROS --- */}
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
+          <h2 className="display-6 fw-bold mb-0">Catálogo</h2>
           
-          <div className="btn-group btn-group-sm">
+          {/* Selector de Fuente de Datos (Requerimiento) */}
+          <div className="btn-group btn-group-sm shadow-sm">
             <button 
                 className={`btn ${dataSource === 'api' ? 'btn-dark' : 'btn-outline-dark'}`}
                 onClick={() => setDataSource('api')}>
-                API
+                <i className="bi bi-cloud-arrow-down me-1"></i> API
             </button>
             <button 
                 className={`btn ${dataSource === 'json' ? 'btn-dark' : 'btn-outline-dark'}`}
                 onClick={() => setDataSource('json')}>
-                JSON Local
+                <i className="bi bi-hdd me-1"></i> Local
             </button>
           </div>
       </div>
 
-      {/* Grid de Productos */}
-      <div className="row g-4">
+      {/* --- GRILLA DE PRODUCTOS (Mobile First) --- */}
+      {/* 
+          row g-2: Espacio reducido entre columnas en móvil.
+          g-md-4: Espacio normal en escritorio.
+      */}
+      <div className="row g-2 g-md-4">
         {currentItems.map(prod => (
-          <div key={prod.id} className="col-md-4 col-sm-6">
+          // col-6: Ocupa 50% de ancho en móviles (2 columnas).
+          // col-md-4: Ocupa 33% en tablets/escritorio (3 columnas).
+          <div key={prod.id} className="col-6 col-md-4 col-lg-4 d-flex">
             <ProductCard product={prod} />
           </div>
         ))}
-        {products.length === 0 && <p className="text-center">No se encontraron productos.</p>}
+        
+        {products.length === 0 && (
+          <div className="col-12 text-center py-5">
+            <p className="text-muted fs-4">No se encontraron productos disponibles.</p>
+          </div>
+        )}
       </div>
 
-      {/* Paginador */}
-      <Pagination 
-        itemsPerPage={itemsPerPage} 
-        totalItems={products.length} 
-        paginate={paginate}
-        currentPage={currentPage}
-      />
+      {/* --- PAGINADOR --- */}
+      <div className="py-4">
+        <Pagination 
+          itemsPerPage={itemsPerPage} 
+          totalItems={products.length} 
+          paginate={paginate}
+          currentPage={currentPage}
+        />
+      </div>
     </div>
   );
 };
